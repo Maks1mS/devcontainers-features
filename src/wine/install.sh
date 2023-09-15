@@ -1,26 +1,32 @@
 #!/bin/sh
 set -e
 
-echo "Activating feature 'color'"
-echo "The provided favorite color is: ${FAVORITE}"
+WINEVERSION=$WINEVERSION
+WINEHOME="/home/root"
+WINEPREFIX="$WINEHOME/.wine32"
+WINEARCH="win32"
+WINEDEBUG=-all
 
+ensure_nanolayer nanolayer_location "v0.5.0"
 
-# The 'install.sh' entrypoint script is always executed as the root user.
-#
-# These following environment variables are passed in by the dev container CLI.
-# These may be useful in instances where the context of the final 
-# remoteUser or containerUser is useful.
-# For more details, see https://containers.dev/implementors/features#user-env-var
-echo "The effective dev container remoteUser is '$_REMOTE_USER'"
-echo "The effective dev container remoteUser's home directory is '$_REMOTE_USER_HOME'"
+$nanolayer_location \
+  install \ 
+  apt-get \ 
+    apt-transport-https \
+    ca-certificates \
+    telnet \
+    cabextract \
+    gnupg2 \
+    wget
 
-echo "The effective dev container containerUser is '$_CONTAINER_USER'"
-echo "The effective dev container containerUser's home directory is '$_CONTAINER_USER_HOME'"
+wget https://dl.winehq.org/wine-builds/winehq.key -O - | apt-key add -
+echo "deb https://dl.winehq.org/wine-builds/debian bookworm main" > /etc/apt/sources.list.d/winehq.list
+{ \
+	echo "Package: *wine* *wine*:i386"; \
+	echo "Pin: version $WINEVERSION~bookworm"; \
+	echo "Pin-Priority: 1001"; \
+} > /etc/apt/preferences.d/winehq.pref
 
-cat > /usr/local/bin/color \
-<< EOF
-#!/bin/sh
-echo "my favorite color is ${FAVORITE}"
-EOF
-
-chmod +x /usr/local/bin/color
+$nanolayer_location install apt-get winehq-stable
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
+chmod +rx /usr/bin/winetricks

@@ -1,0 +1,10 @@
+{
+    "hello": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "wine": {
+                "version": "8.15"
+            }
+        }
+    }
+}
