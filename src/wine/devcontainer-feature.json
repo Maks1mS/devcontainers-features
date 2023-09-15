@@ -4,15 +4,9 @@
     "version": "1.0.0",
     "description": "A feature to remind you of your favorite color",
     "options": {
-        "favorite": {
+        "version": {
             "type": "string",
-            "enum": [
-                "red",
-                "gold",
-                "green"
-            ],
-            "default": "red",
-            "description": "Choose your favorite color."
+            "default": "8.15"
         }
     },
     "installsAfter": [
