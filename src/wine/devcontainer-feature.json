@@ -6,7 +6,7 @@
     "options": {
         "version": {
             "type": "string",
-            "default": "8.15"
+            "default": "latest"
         }
     },
     "installsAfter": [

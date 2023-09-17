@@ -1,11 +1,7 @@
 #!/bin/sh
 set -e
 
-WINEVERSION=$WINEVERSION
-WINEHOME="/home/root"
-WINEPREFIX="$WINEHOME/.wine32"
-WINEARCH="win32"
-WINEDEBUG=-all
+WINEVERSION="${VERSION:-"latest"}"
 
 install_debian() {
   export DEBIAN_FRONTEND=noninteractive
@@ -21,11 +17,14 @@ install_debian() {
 
   wget https://dl.winehq.org/wine-builds/winehq.key -O - | apt-key add -
   echo "deb https://dl.winehq.org/wine-builds/debian $VERSION_CODENAME main" >/etc/apt/sources.list.d/winehq.list
-  {
-    echo "Package: *wine* *wine*:i386"
-    echo "Pin: version $WINEVERSION~$VERSION_CODENAME"
-    echo "Pin-Priority: 1001"
-  } >/etc/apt/preferences.d/winehq.pref
+
+  if [ "${WINEVERSION}" != "latest" ]; then
+    {
+      echo "Package: *wine* *wine*:i386"
+      echo "Pin: version $WINEVERSION~$VERSION_CODENAME"
+      echo "Pin-Priority: 1001"
+    } >/etc/apt/preferences.d/winehq.pref
+  fi
 
   apt-get update
   apt-get install -y --no-install-recommends winehq-stable
