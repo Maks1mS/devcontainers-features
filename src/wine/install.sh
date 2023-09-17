@@ -32,6 +32,8 @@ install_debian() {
   wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
   chmod +rx /usr/bin/winetricks
 
+  su -l $_REMOTE_USER -c "WINEPREFIX=\"$_REMOTE_USER_HOME\" wine wineboot --init"
+
   apt purge --auto-remove -y
   apt autoremove --purge -y
   rm -rf /var/lib/apt/lists/*
