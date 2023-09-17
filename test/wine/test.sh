@@ -3,7 +3,6 @@ set -e
 
 source dev-container-features-test-lib
 
-check "wine exists" wine --version
-check 
+check "wine exists" bash -c "wine --version"
 
 reportResults
