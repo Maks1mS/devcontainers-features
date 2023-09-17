@@ -27,7 +27,8 @@ install_debian() {
   fi
 
   apt-get update
-  apt-get install -y --no-install-recommends winehq-stable
+  apt-get install -y --no-install-recommends winehq-staging
+
   wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
   chmod +rx /usr/bin/winetricks
 
