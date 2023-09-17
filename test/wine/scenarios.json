@@ -1,9 +1,9 @@
 {
-    "hello": {
+    "wine_specified_version": {
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "wine": {
-                "version": "8.15"
+                "version": "8.5"
             }
         }
     }
