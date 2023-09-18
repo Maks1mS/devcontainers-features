@@ -1,7 +1,7 @@
 
 # Wine (wine)
 
-A feature to remind you of your favorite color
+Installs Wine.
 
 ## Example Usage
 
@@ -15,9 +15,11 @@ A feature to remind you of your favorite color
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| version | - | string | 8.15 |
+| version | - | string | latest |
 
+## OS Support
 
+This Feature works on recent versions of Debian.
 
 ---
 
