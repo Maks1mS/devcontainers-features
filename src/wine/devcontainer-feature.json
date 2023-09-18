@@ -2,7 +2,7 @@
     "name": "Wine",
     "id": "wine",
     "version": "1.0.0",
-    "description": "A feature to remind you of your favorite color",
+    "description": "Installs Wine.",
     "options": {
         "version": {
             "type": "string",
