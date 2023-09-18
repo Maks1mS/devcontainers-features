@@ -21,7 +21,7 @@ install_debian() {
   if [ "${WINEVERSION}" != "latest" ]; then
     {
       echo "Package: *wine* *wine*:i386"
-      echo "Pin: version $WINEVERSION~$VERSION_CODENAME"
+      echo "Pin: version $WINEVERSION~*"
       echo "Pin-Priority: 1001"
     } >/etc/apt/preferences.d/winehq.pref
   fi
