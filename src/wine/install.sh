@@ -1,7 +1,23 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 WINEVERSION="${VERSION:-"latest"}"
+
+WINEHOME=$_REMOTE_USER_HOME
+WINEPREFIX="$WINEHOME/.wine32"
+WINEARCH="win32"
+WINEDEBUG="-all"
+
+update_rc_file() {
+  # see if folder containing file exists
+  local rc_file_folder
+  rc_file_folder="$(dirname "$1")"
+  if [ ! -d "${rc_file_folder}" ]; then
+    echo "${rc_file_folder} does not exist. Skipping update of $1."
+  elif [ ! -e "$1" ] || [[ "$(cat "$1")" != *"$2"* ]]; then
+    echo "$2" >>"$1"
+  fi
+}
 
 install_debian() {
   export DEBIAN_FRONTEND=noninteractive
@@ -32,7 +48,21 @@ install_debian() {
   wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
   chmod +rx /usr/bin/winetricks
 
-  su -l "$_REMOTE_USER" -c "WINEPREFIX=\"$_REMOTE_USER_HOME\" wine wineboot --init"
+  mkdir -p "$WINEPREFIX"
+
+  snippet="
+  WINEHOME=\"$_REMOTE_USER_HOME\"
+  WINEPREFIX=\"\$WINEHOME/.wine32\"
+  WINEARCH=win32
+  WINEDEBUG=-all
+  "
+
+  update_rc_file "$_REMOTE_USER_HOME/.zshenv" "${snippet}"
+  update_rc_file "$_REMOTE_USER_HOME/.profile" "${snippet}"
+  update_rc_file "$_REMOTE_USER_HOME/.bashrc" "${snippet}"
+
+  su -l "$_REMOTE_USER" -c "mkdir -p $WINEPREFIX"
+  su -l "$_REMOTE_USER" -c "wine wineboot --init"
 
   # Cleanup
   apt purge --auto-remove -y
