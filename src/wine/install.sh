@@ -48,8 +48,6 @@ install_debian() {
   wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
   chmod +rx /usr/bin/winetricks
 
-  mkdir -p "$WINEPREFIX"
-
   snippet="export WINEHOME=\"$_REMOTE_USER_HOME\"
 export WINEPREFIX=\"\$WINEHOME/.wine32\"
 export WINEARCH=win32
