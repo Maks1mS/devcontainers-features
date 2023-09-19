@@ -7,7 +7,7 @@ Installs Wine.
 
 ```json
 "features": {
-    "ghcr.io/Maks1mS/devcontainers-features/wine:1": {}
+    "ghcr.io/Maks1mS/devcontainers-features/wine:0": {}
 }
 ```
 
