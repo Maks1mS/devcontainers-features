@@ -58,6 +58,7 @@ export WINEDEBUG=-all"
   update_rc_file "$_REMOTE_USER_HOME/.bashrc" "${snippet}"
 
   su -l "$_REMOTE_USER" -c "mkdir -p $WINEPREFIX && wine wineboot --init"
+  su -l "$_REMOTE_USER" -c "winetricks corefonts"
 
   # Cleanup
   apt purge --auto-remove -y
