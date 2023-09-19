@@ -50,19 +50,16 @@ install_debian() {
 
   mkdir -p "$WINEPREFIX"
 
-  snippet="
-  WINEHOME=\"$_REMOTE_USER_HOME\"
-  WINEPREFIX=\"\$WINEHOME/.wine32\"
-  WINEARCH=win32
-  WINEDEBUG=-all
-  "
+  snippet="export WINEHOME=\"$_REMOTE_USER_HOME\"
+export WINEPREFIX=\"\$WINEHOME/.wine32\"
+export WINEARCH=win32
+export WINEDEBUG=-all"
 
   update_rc_file "$_REMOTE_USER_HOME/.zshenv" "${snippet}"
   update_rc_file "$_REMOTE_USER_HOME/.profile" "${snippet}"
   update_rc_file "$_REMOTE_USER_HOME/.bashrc" "${snippet}"
 
-  su -l "$_REMOTE_USER" -c "mkdir -p $WINEPREFIX"
-  su -l "$_REMOTE_USER" -c "wine wineboot --init"
+  su -l "$_REMOTE_USER" -c "mkdir -p $WINEPREFIX && wine wineboot --init"
 
   # Cleanup
   apt purge --auto-remove -y
