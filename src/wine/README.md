@@ -15,7 +15,7 @@ Installs Wine.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| version | - | string | latest |
+| version | Version of Wine | string | latest |
 
 ## OS Support
 
