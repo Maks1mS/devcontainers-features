@@ -8,7 +8,7 @@ WINEPREFIX="$WINEHOME/.wine32"
 # WINEARCH="win32"
 # WINEDEBUG="-all"
 
-COREFONTS_BASE_URL="https://github.com/Maks1mS/devcontainers-features/raw/main/src/wine/corefonts/"
+COREFONTS_BASE_URL="https://raw.githubusercontent.com/Maks1mS/devcontainers-features/main/src/wine/corefonts/"
 COREFONTS_FILES=(
   "andale32.exe"
   "arial32.exe"
@@ -78,9 +78,9 @@ export WINEDEBUG=-all"
     wine wineboot --init
     echo "check-certificate = off" >> ~/.wgetrc
     echo "check_certificate = off" >> ~/.wgetrc
-    mkdir -p "$COREFONTS_CACHE_DIR"
+    mkdir -p "\$COREFONTS_CACHE_DIR"
     for filename in "${COREFONTS_FILES[@]}"; do
-      curl -O "$COREFONTS_CACHE_DIR\$filename $COREFONTS_BASE_URL\$filename"
+      wget -P "$COREFONTS_CACHE_DIR" "$COREFONTS_BASE_URL\$filename"
     done
     winetricks corefonts
 EOF
