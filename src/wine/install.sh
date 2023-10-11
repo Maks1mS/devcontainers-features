@@ -5,8 +5,24 @@ WINEVERSION="${VERSION:-"latest"}"
 
 WINEHOME=$_REMOTE_USER_HOME
 WINEPREFIX="$WINEHOME/.wine32"
-WINEARCH="win32"
-WINEDEBUG="-all"
+# WINEARCH="win32"
+# WINEDEBUG="-all"
+
+COREFONTS_BASE_URL="https://github.com/Maks1mS/devcontainers-features/raw/main/src/wine/corefonts/"
+COREFONTS_FILES=(
+  "andale32.exe"
+  "arial32.exe"
+  "arialb32.exe"
+  "courie32.exe"
+  "georgi32.exe"
+  "impact32.exe"
+  "times32.exe"
+  "trebuc32.exe"
+  "verdan32.exe"
+  "wd97vwr32.exe"
+  "webdin32.exe"
+)
+COREFONTS_CACHE_DIR="$HOME/.cache/winetricks/corefonts/"
 
 update_rc_file() {
   # see if folder containing file exists
@@ -57,10 +73,17 @@ export WINEDEBUG=-all"
   update_rc_file "$_REMOTE_USER_HOME/.profile" "${snippet}"
   update_rc_file "$_REMOTE_USER_HOME/.bashrc" "${snippet}"
 
-  su -l "$_REMOTE_USER" -c "mkdir -p $WINEPREFIX && wine wineboot --init"
-  su -l "$_REMOTE_USER" -c "echo \"check-certificate = off\" >> ~/.wgetrc"
-  su -l "$_REMOTE_USER" -c "echo \"check_certificate = off\" >> ~/.wgetrc"
-  su -l "$_REMOTE_USER" -c "winetricks corefonts"
+  su - "$_REMOTE_USER" <<EOF
+    mkdir -p "$WINEPREFIX"
+    wine wineboot --init
+    echo "check-certificate = off" >> ~/.wgetrc
+    echo "check_certificate = off" >> ~/.wgetrc
+    mkdir -p "$COREFONTS_CACHE_DIR"
+    for filename in "${COREFONTS_FILES[@]}"; do
+      curl -O "$COREFONTS_CACHE_DIR\$filename $COREFONTS_BASE_URL\$filename"
+    done
+    winetricks corefonts
+EOF
 
   # Cleanup
   apt purge --auto-remove -y
