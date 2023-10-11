@@ -22,7 +22,7 @@ COREFONTS_FILES=(
   "wd97vwr32.exe"
   "webdin32.exe"
 )
-COREFONTS_CACHE_DIR="$HOME/.cache/winetricks/corefonts/"
+COREFONTS_CACHE_DIR="\$HOME/.cache/winetricks/corefonts/"
 
 update_rc_file() {
   # see if folder containing file exists
@@ -73,13 +73,21 @@ export WINEDEBUG=-all"
   update_rc_file "$_REMOTE_USER_HOME/.profile" "${snippet}"
   update_rc_file "$_REMOTE_USER_HOME/.bashrc" "${snippet}"
 
-  su - "$_REMOTE_USER" <<EOF
-    mkdir -p "$WINEPREFIX"
-    wine wineboot --init
-    echo "check-certificate = off" >> ~/.wgetrc
-    echo "check_certificate = off" >> ~/.wgetrc
-    mkdir -p "\$COREFONTS_CACHE_DIR"
-    for filename in "${COREFONTS_FILES[@]}"; do
+  #   su -l "$_REMOTE_USER" <<EOF
+  #     mkdir -p "$WINEPREFIX"
+  #     wine wineboot --init
+  #     echo "check-certificate = off" >> ~/.wgetrc
+  #     echo "check_certificate = off" >> ~/.wgetrc
+  #     mkdir -p "\$COREFONTS_CACHE_DIR"
+  #     for filename in (${COREFONTS_FILES[@]}); do
+  #       wget -P "$COREFONTS_CACHE_DIR" "$COREFONTS_BASE_URL\$filename"
+  #     done
+  #     winetricks corefonts
+  # EOF
+  su -l $_REMOTE_USER <<EOF
+    mkdir -p "\$WINEPREFIX"
+    mkdir -p "$COREFONTS_CACHE_DIR"
+    for filename in ${COREFONTS_FILES[@]}; do
       wget -P "$COREFONTS_CACHE_DIR" "$COREFONTS_BASE_URL\$filename"
     done
     winetricks corefonts

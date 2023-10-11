@@ -3,6 +3,7 @@ set -e
 
 source dev-container-features-test-lib
 
+check "wine exists" bash -c "wine --version"
 check "wine version is same" bash -c "[[ "$(wine --version | tr -d -c 0-9.)" == *"8.5"* ]]"
 
 reportResults
