@@ -1,7 +1,7 @@
 {
     "name": "Wine",
     "id": "wine",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Installs Wine.",
     "documentationURL": "https://github.com/Maks1mS/devcontainers-features/tree/main/src/wine",
     "options": {
