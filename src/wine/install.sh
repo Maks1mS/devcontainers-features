@@ -36,21 +36,12 @@ update_rc_file() {
   fi
 }
 
-install_debian() {
-  export DEBIAN_FRONTEND=noninteractive
-  dpkg --add-architecture i386
-  apt-get update
-  apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-    telnet \
-    cabextract \
-    gnupg2 \
-    wget
+add_wine_repo() {
+  wget -nv https://dl.winehq.org/wine-builds/winehq.key -O- | apt-key add -
+  echo "deb https://dl.winehq.org/wine-builds/$1 $VERSION_CODENAME main" >/etc/apt/sources.list.d/winehq.list
+}
 
-  wget https://dl.winehq.org/wine-builds/winehq.key -O - | apt-key add -
-  echo "deb https://dl.winehq.org/wine-builds/debian $VERSION_CODENAME main" >/etc/apt/sources.list.d/winehq.list
-
+set_wine_version_preference() {
   if [ "${WINEVERSION}" != "latest" ]; then
     {
       echo "Package: *wine* *wine*:i386"
@@ -58,11 +49,13 @@ install_debian() {
       echo "Pin-Priority: 1001"
     } >/etc/apt/preferences.d/winehq.pref
   fi
+}
 
+install_wine() {
   apt-get update
   apt-get install -y --install-recommends winehq-staging
 
-  wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
+  wget -nv https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /usr/bin/winetricks
   chmod +rx /usr/bin/winetricks
 
   snippet="export WINEHOME=\"$_REMOTE_USER_HOME\"
@@ -79,7 +72,7 @@ export WINEDEBUG=-all"
     wine wineboot --init
     mkdir -p "$COREFONTS_CACHE_DIR"
     for filename in ${COREFONTS_FILES[@]}; do
-      wget -P "$COREFONTS_CACHE_DIR" "$COREFONTS_BASE_URL\$filename"
+      wget -nv -P "$COREFONTS_CACHE_DIR" "$COREFONTS_BASE_URL\$filename"
     done
     winetricks corefonts
 EOF
@@ -92,7 +85,27 @@ EOF
 
 . /etc/os-release
 
-if [ "${ID}" = "debian" ]; then
+if [ "${ID}" = "ubuntu" ]; then
+  install_ubuntu() {
+    export DEBIAN_FRONTEND=noninteractive
+    dpkg --add-architecture i386
+    apt-get update
+    apt-get install -y apt-transport-https ca-certificates telnet cabextract gnupg2 wget
+    add_wine_repo "ubuntu"
+    set_wine_version_preference
+    install_wine
+  }
+  install_ubuntu
+elif [ "${ID}" = "debian" ] || [ "${ID_LIKE}" = "debian" ]; then
+  install_debian() {
+    export DEBIAN_FRONTEND=noninteractive
+    dpkg --add-architecture i386
+    apt-get update
+    apt-get install -y apt-transport-https ca-certificates telnet cabextract gnupg2 wget
+    add_wine_repo "debian"
+    set_wine_version_preference
+    install_wine
+  }
   install_debian
 else
   echo "Linux distro ${ID} not supported."
